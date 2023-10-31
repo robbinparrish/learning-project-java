@@ -1,0 +1,31 @@
+{
+	"name": "learning-project-java",
+	"dockerComposeFile": "devcontainer-docker-compose.yml",
+	"service": "project-workspace",
+	"workspaceFolder": "/workspace",
+
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"streetsidesoftware.code-spell-checker"
+			]
+		}
+	},
+
+	"forwardPorts": [3000],
+	"portsAttributes": {
+		"3000": {
+			"label": "Default Java web-service application port number",
+			"onAutoForward": "notify"
+		}
+	},
+
+	"shutdownAction": "stopCompose",
+	"postCreateCommand": "bash .devcontainer/post-create-command.sh",
+
+	"updateRemoteUserUID": true,
+	"containerUser": "devuser",
+	"remoteUser": "devuser",
+}

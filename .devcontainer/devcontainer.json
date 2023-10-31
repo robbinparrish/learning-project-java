@@ -1,0 +1,37 @@
+{
+	"name": "learning-project-java",
+	"build": { "dockerfile": "Dockerfile" },
+
+	"customizations": {
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"vscjava.vscode-java-pack",
+				"streetsidesoftware.code-spell-checker"
+			]
+		}
+	},
+
+	"forwardPorts": [3000],
+	"portsAttributes": {
+		"3000": {
+			"label": "Default Java web-service application port number",
+			"onAutoForward": "notify"
+		}
+	},
+
+	"shutdownAction": "stopContainer",
+	"postCreateCommand": "bash .devcontainer/post-create-command.sh",
+
+	"updateRemoteUserUID": true,
+	"containerUser": "devuser",
+	"remoteUser": "devuser",
+
+	"runArgs": [
+		"--rm",
+		"-v",
+		"${env:SSH_AUTH_SOCK}:/tmp/ssh-agent.socket",
+		"-e",
+		"SSH_AUTH_SOCK=/tmp/ssh-agent.socket"
+	]
+}

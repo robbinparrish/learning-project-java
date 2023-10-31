@@ -1,0 +1,27 @@
+#
+# docker-compose config file for setting up devcontainer environment.
+#
+
+version: '3.8'
+services:
+  project-workspace:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      - SSH_AUTH_SOCK="/tmp/ssh-agent.socket"
+    volumes:
+      - ${SSH_AUTH_SOCK}:/tmp/ssh-agent.socket
+      - ..:/workspace:cached
+    command: sleep infinity
+    network_mode: "bridge"
+    links:
+      - backend-service
+  backend-service:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: dbpassword
+    restart: always
+    network_mode: "bridge"

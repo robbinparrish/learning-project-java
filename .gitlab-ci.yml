@@ -1,0 +1,48 @@
+#
+# gitlab ci/cd config file.
+#
+
+# Default docker image for runner.
+image: debian:12.2
+
+
+# Default Variables.
+variables:
+  BUILD_OUT_DIR: "build-dir"
+
+
+# Default Stages.
+stages:
+  - generate_version_id
+  - release_version_id
+
+
+# Generate Version ID.
+generate_version_id:
+  stage: generate_version_id
+  script:
+    - VERSION_ID=$(bash helper-scripts/generate_version_id.sh)
+    - echo "Version ID is - ${VERSION_ID}"
+    - mkdir -p ${BUILD_OUT_DIR}
+    - echo ${VERSION_ID} > ${BUILD_OUT_DIR}/version-id
+  artifacts:
+    paths:
+      - ${BUILD_OUT_DIR}/*
+    expire_in: 1 day
+  except:
+    - tags
+
+
+# Release Version ID.
+release_version_id:
+  stage: release_version_id
+  script:
+    - VERSION_ID=$(cat ${BUILD_OUT_DIR}/version-id)
+    - echo "Version ID is - ${VERSION_ID}"
+    - bash helper-scripts/release_version_id.sh "${VERSION_ID}" "${PROJECT_ACCESS_TOKEN}"
+  only:
+    - /^v+\d+\.+\d+\.+\d+$/
+    - main
+  except:
+    - tags
+
